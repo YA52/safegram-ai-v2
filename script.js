@@ -3,7 +3,7 @@ function checkComment() {
 
     let score = 100;
 
-    let badWords = ["hate", "idiot", "stupid", "kill", "scam", "fake"];
+    let badWords = ["hate", "stupid", "idiot", "kill", "scam", "fake", "abuse"];
 
     badWords.forEach(word => {
         if (text.includes(word)) {
@@ -13,9 +13,13 @@ function checkComment() {
 
     let result = "";
 
-    if (score > 70) result = "SAFE ✅";
-    else if (score > 40) result = "WARNING ⚠️";
-    else result = "DANGEROUS ❌";
+    if (score >= 70) {
+        result = "SAFE ✅";
+    } else if (score >= 40) {
+        result = "WARNING ⚠️";
+    } else {
+        result = "DANGEROUS ❌";
+    }
 
     document.getElementById("result").innerText =
         "Score: " + score + " → " + result;
