@@ -1,46 +1,30 @@
-function analyzeComment(text) {
-    const lowerText = text.toLowerCase();
+async function checkComment() {
+    const text = document.getElementById("commentInput").value;
 
-    // 🔴 unsafe keywords
-    const toxicWords = [
-        "stupid", "idiot", "hate", "kill", "worst", "ugly",
-        "fake", "scam", "idiot", "damn"
-    ];
-
-    const spamWords = [
-        "buy now", "click here", "subscribe", "free money",
-        "earn fast", "limited offer"
-    ];
-
-    let score = 100; // start safe
-
-    // check toxic
-    toxicWords.forEach(word => {
-        if (lowerText.includes(word)) {
-            score -= 25;
-        }
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer YOUR_API_KEY_HERE"
+        },
+        body: JSON.stringify({
+            model: "gpt-4o-mini",
+            messages: [
+                {
+                    role: "system",
+                    content: "You are a comment safety checker. Classify comments as SAFE, WARNING, or DANGEROUS and give short reason."
+                },
+                {
+                    role: "user",
+                    content: text
+                }
+            ]
+        })
     });
 
-    // check spam
-    spamWords.forEach(word => {
-        if (lowerText.includes(word)) {
-            score -= 30;
-        }
-    });
+    const data = await response.json();
 
-    // final result
-    let result = "";
+    const result = data.choices[0].message.content;
 
-    if (score >= 70) {
-        result = "SAFE ✅";
-    } else if (score >= 40) {
-        result = "WARNING ⚠️";
-    } else {
-        result = "DANGEROUS ❌";
-    }
-
-    return {
-        score: score,
-        result: result
-    };
+    document.getElementById("result").innerText = result;
 }
