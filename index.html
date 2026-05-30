@@ -1,33 +1,25 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>AI Comment Safety Checker</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <title>AI Comment Safety Checker</title>
+
+    <!-- IMPORTANT: correct path -->
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<div class="container">
-  <h1>AI Comment Safety Checker</h1>
+    <h1>AI Comment Safety Checker</h1>
 
-  <textarea id="commentBox"
-    placeholder="Paste comment here">
-  </textarea>
+    <textarea id="commentInput" placeholder="Enter comment..."></textarea>
 
-  <button onclick="analyzeComment()">
-    Analyze
-  </button>
+    <button onclick="checkComment()">Check</button>
 
-  <h2 id="result"></h2>
-  <progress id="meter" value="0" max="100"></progress>
-</div>
+    <h3 id="result"></h3>
 
-<script src="script.js"></script>
+    <!-- IMPORTANT -->
+    <script src="script.js"></script>
 
 </body>
 </html>
-
-<textarea id="commentInput" placeholder="Enter comment..."></textarea>
-<button onclick="checkComment()">Check</button>
-
-<h3 id="output"></h3>

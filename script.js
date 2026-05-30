@@ -1,30 +1,22 @@
-async function checkComment() {
-    const text = document.getElementById("commentInput").value;
+function checkComment() {
+    let text = document.getElementById("commentInput").value.toLowerCase();
 
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": "Bearer YOUR_API_KEY_HERE"
-        },
-        body: JSON.stringify({
-            model: "gpt-4o-mini",
-            messages: [
-                {
-                    role: "system",
-                    content: "You are a comment safety checker. Classify comments as SAFE, WARNING, or DANGEROUS and give short reason."
-                },
-                {
-                    role: "user",
-                    content: text
-                }
-            ]
-        })
+    let score = 100;
+
+    let badWords = ["hate", "idiot", "stupid", "kill", "scam", "fake"];
+
+    badWords.forEach(word => {
+        if (text.includes(word)) {
+            score -= 30;
+        }
     });
 
-    const data = await response.json();
+    let result = "";
 
-    const result = data.choices[0].message.content;
+    if (score > 70) result = "SAFE ✅";
+    else if (score > 40) result = "WARNING ⚠️";
+    else result = "DANGEROUS ❌";
 
-    document.getElementById("result").innerText = result;
+    document.getElementById("result").innerText =
+        "Score: " + score + " → " + result;
 }
