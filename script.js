@@ -3,11 +3,31 @@ function checkComment() {
 
     let score = 100;
 
-    let badWords = ["hate", "stupid", "idiot", "kill", "scam", "fake", "abuse"];
+    // strong bad intent patterns
+    let badPatterns = [
+        "you are waste",
+        "waste fellow",
+        "useless",
+        "hate you",
+        "very bad",
+        "stupid",
+        "idiot",
+        "worst person",
+        "shut up"
+    ];
+
+    badPatterns.forEach(p => {
+        if (text.includes(p)) {
+            score -= 40;
+        }
+    });
+
+    // single words
+    let badWords = ["hate", "idiot", "stupid", "useless", "waste"];
 
     badWords.forEach(word => {
         if (text.includes(word)) {
-            score -= 30;
+            score -= 20;
         }
     });
 
