@@ -1,58 +1,39 @@
-import express from "express";
-import cors from "cors";
-import dotenv from "dotenv";
-import OpenAI from "openai";
+function checkComment() {
 
-dotenv.config();
+    let comment = document.getElementById("commentInput").value.toLowerCase();
 
-const app = express();
-app.use(cors());
-app.use(express.json());
+    let score = 100;
 
-const client = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+    const badWords = [
+        "waste",
+        "idiot",
+        "stupid",
+        "hate",
+        "kill",
+        "ugly",
+        "loser",
+        "useless",
+        "fool",
+        "scam",
+        "bad"
+    ];
 
-app.post("/analyze", async (req, res) => {
-  const { comment } = req.body;
-
-  try {
-    const response = await client.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [
-        {
-          role: "system",
-          content: `
-You are an AI comment safety moderator.
-Classify comments into:
-- SAFE
-- WARNING
-- DANGEROUS
-
-Also give short reason.
-Return in JSON format:
-{
-  "label": "...",
-  "reason": "..."
-}
-`
-        },
-        {
-          role: "user",
-          content: comment
+    badWords.forEach(word => {
+        if (comment.includes(word)) {
+            score -= 20;
         }
-      ]
     });
 
-    res.json({
-      result: response.choices[0].message.content
-    });
+    let status = "";
 
-  } catch (err) {
-    res.status(500).json({ error: "AI server error" });
-  }
-});
+    if (score >= 80) {
+        status = "SAFE ✅";
+    } else if (score >= 50) {
+        status = "WARNING ⚠️";
+    } else {
+        status = "DANGEROUS ❌";
+    }
 
-app.listen(5000, () => {
-  console.log("SafeGram AI running on port 5000");
-});
+    document.getElementById("result").innerHTML =
+        `Score: ${score}<br>Status: ${status}`;
+}
