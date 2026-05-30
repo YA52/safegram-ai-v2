@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>AI Comment Safety Checker</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="container">
+  <h1>AI Comment Safety Checker</h1>
+
+  <textarea id="commentBox"
+    placeholder="Paste comment here">
+  </textarea>
+
+  <button onclick="analyzeComment()">
+    Analyze
+  </button>
+
+  <h2 id="result"></h2>
+  <progress id="meter" value="0" max="100"></progress>
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
