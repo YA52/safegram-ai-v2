@@ -1,48 +1,46 @@
-function analyzeComment() {
+function analyzeComment(text) {
+    const lowerText = text.toLowerCase();
 
-  let comment =
-  document.getElementById("commentBox").value;
+    // 🔴 unsafe keywords
+    const toxicWords = [
+        "stupid", "idiot", "hate", "kill", "worst", "ugly",
+        "fake", "scam", "idiot", "damn"
+    ];
 
-  let result =
-  document.getElementById("result");
+    const spamWords = [
+        "buy now", "click here", "subscribe", "free money",
+        "earn fast", "limited offer"
+    ];
 
-  let meter =
-  document.getElementById("meter");
+    let score = 100; // start safe
 
-  comment = comment.toLowerCase();
+    // check toxic
+    toxicWords.forEach(word => {
+        if (lowerText.includes(word)) {
+            score -= 25;
+        }
+    });
 
-  let score = 10;
+    // check spam
+    spamWords.forEach(word => {
+        if (lowerText.includes(word)) {
+            score -= 30;
+        }
+    });
 
-  if(comment.includes("fake")) score = 70;
-  if(comment.includes("stupid")) score = 80;
-  if(comment.includes("waste")) score = 90;
-  if(comment.includes("hate")) score = 95;
+    // final result
+    let result = "";
 
-  meter.value = score;
+    if (score >= 70) {
+        result = "SAFE ✅";
+    } else if (score >= 40) {
+        result = "WARNING ⚠️";
+    } else {
+        result = "DANGEROUS ❌";
+    }
 
-  if(score >= 80){
-
-    result.innerHTML =
-    "TOXIC COMMENT | SCORE: " + score + "%";
-
-    result.style.color = "red";
-
-  }
-  else if(score >= 50){
-
-    result.innerHTML =
-    "SUSPICIOUS COMMENT | SCORE: " + score + "%";
-
-    result.style.color = "orange";
-
-  }
-  else{
-
-    result.innerHTML =
-    "SAFE COMMENT | SCORE: " + score + "%";
-
-    result.style.color = "green";
-
-  }
-
+    return {
+        score: score,
+        result: result
+    };
 }
