@@ -1,46 +1,58 @@
-function checkComment() {
-    let text = document.getElementById("commentInput").value.toLowerCase();
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import OpenAI from "openai";
 
-    let score = 100;
+dotenv.config();
 
-    // strong bad intent patterns
-    let badPatterns = [
-        "you are waste",
-        "waste fellow",
-        "useless",
-        "hate you",
-        "very bad",
-        "stupid",
-        "idiot",
-        "worst person",
-        "shut up"
-    ];
+const app = express();
+app.use(cors());
+app.use(express.json());
 
-    badPatterns.forEach(p => {
-        if (text.includes(p)) {
-            score -= 40;
-        }
-    });
+const client = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
 
-    // single words
-    let badWords = ["hate", "idiot", "stupid", "useless", "waste"];
+app.post("/analyze", async (req, res) => {
+  const { comment } = req.body;
 
-    badWords.forEach(word => {
-        if (text.includes(word)) {
-            score -= 20;
-        }
-    });
+  try {
+    const response = await client.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [
+        {
+          role: "system",
+          content: `
+You are an AI comment safety moderator.
+Classify comments into:
+- SAFE
+- WARNING
+- DANGEROUS
 
-    let result = "";
-
-    if (score >= 70) {
-        result = "SAFE ✅";
-    } else if (score >= 40) {
-        result = "WARNING ⚠️";
-    } else {
-        result = "DANGEROUS ❌";
-    }
-
-    document.getElementById("result").innerText =
-        "Score: " + score + " → " + result;
+Also give short reason.
+Return in JSON format:
+{
+  "label": "...",
+  "reason": "..."
 }
+`
+        },
+        {
+          role: "user",
+          content: comment
+        }
+      ]
+    });
+
+    res.json({
+      result: response.choices[0].message.content
+    });
+
+  } catch (err) {
+    res.status(500).json({ error: "AI server error" });
+  }
+});
+
+app.listen(5000, () => {
+  console.log("SafeGram AI running on port 5000");
+});
