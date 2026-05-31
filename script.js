@@ -1,6 +1,6 @@
 function checkComment() {
-    let comment = document.getElementById("commentInput").value.toLowerCase();
-
+    document.getElementById("result").innerHTML =
+    `Score: ${data.score}<br>Status: ${data.status}<br>${data.message}`;
     let score = 100;
 
     const badWords = [
