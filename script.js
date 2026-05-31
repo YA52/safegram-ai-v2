@@ -1,16 +1,13 @@
 function checkComment() {
-    document.getElementById("result").innerHTML =
-    `Score: ${data.score}<br>Status: ${data.status}<br>${data.message}`;
+
+    let comment = document.getElementById("commentInput").value.toLowerCase();
+
     let score = 100;
 
     const badWords = [
-        // English
         "fake","fraud","scam","idiot","stupid","hate",
         "loser","useless","ugly","cheater","garbage",
         "worst","fool","nonsense","waste",
-
-        // Telugu (English script)
-        "panikimalina",
         "panikimalina",
         "chetta",
         "vedhava",
@@ -26,16 +23,20 @@ function checkComment() {
 
     if (score < 0) score = 0;
 
-    let status;
+    let status = "";
+    let message = "";
 
     if (score >= 80) {
         status = "SAFE ✅";
+        message = "Comment Safe";
     } else if (score >= 50) {
         status = "WARNING ⚠️";
+        message = "Comment harmful ga undachu";
     } else {
         status = "DANGEROUS ❌";
+        message = "Comment block cheyyali";
     }
 
     document.getElementById("result").innerHTML =
-        `Score: ${score}<br>Status: ${status}`;
+        `Score: ${score}<br>Status: ${status}<br>${message}`;
 }
