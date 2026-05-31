@@ -1,44 +1,22 @@
-function checkComment() {
-    let comment = document.getElementById("commentInput").value.toLowerCase();
+async function checkComment() {
 
-    let score = 100;
+    let text = document.getElementById("commentInput").value;
 
-    const badWords = [
-        // English
-        "fake","fraud","scam","idiot","stupid","hate",
-        "loser","useless","ugly","cheater","garbage",
-        "worst","fool","nonsense","waste",
-
-        // Telugu (English script)
-        "panikimalina",
-        "chetta",
-        "vedhava",
-        "daridram",
-        "mosagadu",
-        "pichi",
-        "nikrusta",
-        "waste fellow",
-        "useless fellow"
-    ];
-
-    badWords.forEach(word => {
-        if (comment.includes(word)) {
-            score -= 20;
+    const res = await fetch(
+        "https://safegram-ai-backend.onrender.com/analyze",
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                comment: text
+            })
         }
-    });
+    );
 
-    if (score < 0) score = 0;
-
-    let status;
-
-    if (score >= 80) {
-        status = "SAFE ✅";
-    } else if (score >= 50) {
-        status = "WARNING ⚠️";
-    } else {
-        status = "DANGEROUS ❌";
-    }
+    const data = await res.json();
 
     document.getElementById("result").innerHTML =
-        `Score: ${score}<br>Status: ${status}`;
+        `Score: ${data.score}<br>Status: ${data.status}`;
 }
